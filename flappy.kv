@@ -1,0 +1,29 @@
+
+#:import Window kivy.core.window.Window
+
+#:set PPU        5
+#:set BIRD_SX    18
+#:set BIRD_SY    14
+#:set hpos       150
+
+<Bird>:
+    canvas:
+        Color:
+            rgb: 1., 1., 1.
+        Rectangle:
+            pos: hpos, self.vpos - BIRD_SY * PPU * .5
+            size: BIRD_SX * PPU, BIRD_SY * PPU
+            source: './res/bird.png'
+
+<Root>:
+    bird: bird
+    size: Window.size
+    canvas:
+        Color:
+            # Light blue sky color.
+            rgb: 113. / 255, 196. / 255, 210. / 255
+        Rectangle:
+            size: Window.size
+    Bird:
+        id: bird
+        vpos: Window.size[1] / 2

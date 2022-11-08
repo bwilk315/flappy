@@ -1,0 +1,10 @@
+
+# File extensions.
+*.spec
+
+# Directories.
+.buildozer
+bin
+local
+venv
+__pycache__
