@@ -1,0 +1,60 @@
+
+#:import win kivy.core.window.Window
+#:import Root root.Root
+#:import Bird bird.Bird
+
+#:set PPU         5    # Number of pixels per one unit.
+#:set BIRD_SX     18   # Bird size in X axis.
+#:set BIRD_SY     14   # Bird size in Y axis.
+#:set WHITE_COLOR 255/255, 255/255, 255/255
+#:set SKY_COLOR   113/255, 196/255, 210/255
+
+Root:  # Show root component.
+
+<Bird>:
+    # Bird position varies only in Y axis. Horizontal and vertical position
+    # has offset of half bird's size, it depends on amount of pixels per unit.
+    pos: self.hpos - BIRD_SX * PPU * .5, self.vpos - BIRD_SY * PPU * .5
+    # Bird size is scaled using pixels per unit constant.
+    size: BIRD_SX * PPU, BIRD_SY * PPU
+    # This canvas part happens just before actual canvas rendering.
+    canvas.before:
+        # Save current matrix transformations. Notice that every widget in
+        # the application has separate canvas, so anyway transformations done
+        # in this widget will not touch others' canvases.
+        PushMatrix:
+        # Transform rotation of the matrix.
+        Rotate:
+            angle: self.rot  # Angle in degrees to set.
+            origin: self.center  # Rotate around center.
+    # Visual instructions should be put here.
+    canvas:
+        # Set color of everything drawn after this transformation.
+        Color:
+            rgb: WHITE_COLOR
+        # Draw a rectangle with a bird as texture. Copy position and size
+        # from the bird to fit texture perfectly in a root widget.
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: './images/bird.png'
+    # This part happens just after canvas rendering is finished.
+    canvas.after:
+        PopMatrix:  # Revert saved matrix transformation.
+
+<Root>:
+    # Property variable with name 'bird' has the id equal 'bird' here.
+    bird: bird
+    # Stretch the widget to cover whole window.
+    size: win.size
+    # Draw the background.
+    canvas:
+        Color:
+            rgb: SKY_COLOR
+        Rectangle:
+            size: win.size
+    # Draw the bird.
+    Bird:
+        id: bird
+        hpos: win.size[0] / 4
+        vpos: win.size[1] / 2
